@@ -25,6 +25,7 @@ class ArticlesController < ApplicationController
 
     respond_to do |format|
       if @article.save
+        @article.save_article_images
         format.html { redirect_to article_url(@article), notice: "Article was successfully created." }
         format.json { render :show, status: :created, location: @article }
       else
@@ -38,6 +39,7 @@ class ArticlesController < ApplicationController
   def update
     respond_to do |format|
       if @article.update(article_params)
+        @article.save_article_images
         format.html { redirect_to article_url(@article), notice: "Article was successfully updated." }
         format.json { render :show, status: :ok, location: @article }
       else
@@ -57,6 +59,28 @@ class ArticlesController < ApplicationController
     end
   end
 
+  # In a new article page, there is no article with an ID.
+  # So, we need to create a new article image and attach the image to it.
+  # But it won't have an article_id yet.
+  def upload_image
+    image = params[:image]
+
+    if image.nil?
+      render json: { success: 0, error: "No image found in request" }
+      return
+    end
+
+    # Use Active Storage to attach the image without an associated article
+    uploaded_image = ArticleImage.create!(image: image)
+
+    # Generate a URL for the uploaded image
+    stored_image_url = rails_blob_url(uploaded_image.image)
+
+    render json: { success: 1, file: { url: stored_image_url } }
+  rescue StandardError => e
+    render json: { success: 0, error: e.message }
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_article
@@ -65,6 +89,6 @@ class ArticlesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def article_params
-      params.require(:article).permit(:title, :content)
+      params.require(:article).permit(:title, :content, :image)
     end
 end
