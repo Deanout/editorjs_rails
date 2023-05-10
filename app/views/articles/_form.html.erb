@@ -1,0 +1,33 @@
+<%= form_with(model: article, data: {
+  controller: "editor"
+}) do |form| %>
+  <% if article.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(article.errors.count, "error") %> prohibited this article from being saved:</h2>
+
+      <ul>
+        <% article.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :title, style: "display: block" %>
+    <%= form.text_field :title %>
+  </div>
+
+  <%= form.hidden_field :content, id: 'article_content_hidden' %>
+
+  <div 
+  id="article_content"
+  data-editor-target="article_content"
+  >
+  <%# Needs to have the article content if it exists already %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
