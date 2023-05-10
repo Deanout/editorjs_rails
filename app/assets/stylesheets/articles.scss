@@ -1,0 +1,41 @@
+:root {
+    --bg-color: #cdd1e0;
+    --front-color: #388ae5;
+    --border-color: #e8e8eb;
+}
+
+.image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+  
+.image-border {
+    border: 1px solid var(--border-color);
+}
+
+.image-background {
+    background-color: var(--bg-color);
+}
+
+.image-stretched {
+    width: 100%;
+    max-width: 100%;
+}
+
+.image {
+    max-width: 100%;
+    height: auto;
+}
+
+.image-with-background {
+    max-width: 60%;
+    margin: 0 auto;
+}
+
+.centered-content {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+} 

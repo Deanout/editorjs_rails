@@ -4,6 +4,7 @@ import EditorJS from "@editorjs/editorjs";
 // These are the plugins
 import CodeTool from "@editorjs/code";
 import Header from "@editorjs/header";
+import ImageTool from "@editorjs/image";
 import List from "@editorjs/list";
 import Paragraph from "@editorjs/paragraph";
 
@@ -11,6 +12,11 @@ import Paragraph from "@editorjs/paragraph";
 export default class extends Controller {
   static targets = ["article_content"];
 
+  csrfToken() {
+    const metaTag = document.querySelector("meta[name='csrf-token']");
+    console.log(metaTag);
+    return metaTag ? metaTag.content : "";
+  }
   connect() {
     console.log("Hello, Stimulus!", this.element);
 
@@ -34,6 +40,17 @@ export default class extends Controller {
           },
         },
         code: CodeTool,
+        image: {
+          class: ImageTool,
+          config: {
+            endpoints: {
+              byFile: `/articles/upload_image`,
+            },
+            additionalRequestHeaders: {
+              "X-CSRF-Token": this.csrfToken(),
+            },
+          },
+        },
       },
     });
 
